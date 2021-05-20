@@ -11,9 +11,12 @@ In those datasets you dont have a primary key but a combination of hole id and i
   - db_join_interval.py - (case 1) join hole intervals  
   - db_join.py - generic join script using a primary key  
   - db_create_from_to.py - create from and to field based on a single depth field. Its a helper script with funcions used by other scripts.  
+  - bm_breakdown.py - generic aggregation script. In this project works only as a helper script.
  ## supported file formats
  - csv  
  - xlsx  
  - las  
-  
+ ## requirement
+ WinPython 3.7+ installed.
+ Alternatively WinPython can be extracted to %appdata% and the .cmd files should autodetect it there.
  
