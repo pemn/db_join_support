@@ -804,16 +804,18 @@ def pd_load_tri(df_path):
 
 def df_to_nodes_faces_simple(df, node_name, xyz):
   ''' fast version only supporting a single triangulation '''
-  # node may be duplicated for each triangle
-  nodes = df[xyz].values.take(df[node_name].astype(int), 0)
+  import pandas as pd
+  # nodes are duplicated for each face in df
+  # create a list where they are unique again
+  i_row = df[node_name].reset_index().drop_duplicates(subset=node_name)
+  nodes = df.loc[i_row['index'], xyz]
 
   face_size = 3
   if 'n' in df and len(df):
     face_size = int(df['n'].max()) + 1
   # faces are unique so we can use the input data
   faces = df[node_name].values.reshape((len(df) // face_size, face_size))
-
-  return nodes, faces
+  return nodes.values, faces
 
 def df_to_nodes_faces_lines(df, node_name = 'node', xyz = ['x','y','z']):
   nodes = []
@@ -902,7 +904,7 @@ def pd_save_tri(df, df_path):
   for n in nodes:
     tri.add_node(*n)
   for f in faces:
-    tri.add_face(*f)
+    tri.add_face(*map(int,f))
 
   tri.save(df_path)
 
@@ -910,7 +912,6 @@ def pd_save_tri(df, df_path):
 def pd_load_grid(df_path):
   import vulcan
 
-  print(df_path)
   grid = vulcan.grid(df_path)
   df = grid.get_pandas()
   df['filename'] = os.path.basename(df_path)
@@ -1215,8 +1216,6 @@ def pd_load_mesh(df_path):
   import numpy as np
   import pandas as pd
   nodes, faces = leapfrog_load_mesh(df_path)
-  # print(np.shape(nodes))
-  # print(np.shape(faces))
   df_data = [nodes[int(f[n])] + (0,bool(n),n,1,f[n]) for f in faces for n in range(3)]
   return pd.DataFrame(df_data, columns=smartfilelist.default_columns + ['closed','node'])
 
