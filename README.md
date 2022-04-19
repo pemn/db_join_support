@@ -19,4 +19,5 @@ In those datasets you dont have a primary key but a combination of hole id and i
  ## requirement
  WinPython 3.7+ installed.
  Alternatively WinPython can be extracted to %appdata% and the .cmd files should autodetect it there.
- 
+## Repository
+https://github.com/pemn/db_join_support
